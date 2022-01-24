@@ -1,0 +1,24 @@
+# Docker compose version https://docs.docker.com/compose/compose-file
+version: "3.8"
+
+# Docker services
+services:
+  backend:
+    container_name: backend
+    build:
+      context: Backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./Backend:/var/www/html
+    command : bash -c "composer install && apache2-foreground"
+    networks:
+      local:
+        aliases:
+          - local
+    ports:
+      - 8080:80
+
+# Docker networks
+networks:
+  local:
+    name: local
