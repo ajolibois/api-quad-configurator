@@ -62,6 +62,7 @@ final class AddComponentToQuadHandler implements CommandHandler
 			$presenter->error('CANT_FIND_COMPONENT');
 			return;
 		}
+
 		if ($quad->isLocked()) {
 			if (!$command->getPinCode()) {
 				$presenter->error('QUAD_IS_LOCKED_BY_PIN');

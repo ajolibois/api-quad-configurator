@@ -27,7 +27,7 @@ final class Money
 	 * @param Currency $currency
 	 * @return Money
 	 */
-	public static function createNull(Currency $currency)
+	public static function createNull(Currency $currency): self
 	{
 		return new self(0, $currency);
 	}
@@ -52,36 +52,6 @@ final class Money
 	}
 
 	/**
-	 * @return bool
-	 */
-	public function isNull()
-	{
-		return bccomp($this->amount, '0', self::DECIMAL_SCALE) === 0;
-	}
-
-	/**
-	 * @param Money $a
-	 * @param Money $b
-	 * @return Money
-	 */
-	public static function min(Money $a, Money $b)
-	{
-		self::assertSameCurrency($a, $b);
-		return bccomp($a->getAmount(), $b->getAmount(), self::DECIMAL_SCALE) === -1 ? clone $a : clone $b;
-	}
-
-	/**
-	 * @param Money $a
-	 * @param Money $b
-	 * @return Money
-	 */
-	public static function max(Money $a, Money $b)
-	{
-		self::assertSameCurrency($a, $b);
-		return bccomp($a->getAmount(), $b->getAmount(), self::DECIMAL_SCALE) === -1 ? clone $b : clone $a;
-	}
-
-	/**
 	 * @param Money $a
 	 * @param Money $b
 	 */
@@ -93,9 +63,9 @@ final class Money
 	}
 
 	/**
-	 * @return float|string
+	 * @return float
 	 */
-	public function getAmount()
+	public function getAmount(): float
 	{
 		return $this->amount;
 	}
@@ -103,7 +73,7 @@ final class Money
 	/**
 	 * @return Currency
 	 */
-	public function getCurrency()
+	public function getCurrency(): Currency
 	{
 		return $this->currency;
 	}
@@ -112,7 +82,7 @@ final class Money
 	 * @param Money $money
 	 * @return Money
 	 */
-	public function add(Money $money)
+	public function add(Money $money): self
 	{
 		self::assertSameCurrency($money, $this);
 
@@ -126,7 +96,7 @@ final class Money
 	 * @param Money $money
 	 * @return Money
 	 */
-	public function sub(Money $money)
+	public function sub(Money $money): self
 	{
 		self::assertSameCurrency($money, $this);
 
@@ -137,112 +107,12 @@ final class Money
 	}
 
 	/**
-	 * @return Money
-	 */
-	public function abs()
-	{
-		if ($this->isPositiveOrNull()) {
-			return clone $this;
-		}
-
-		return $this->negate();
-	}
-
-	/**
 	 * @param Money $money
 	 * @return bool
 	 */
-	public function hasSameCurrency(Money $money)
+	public function hasSameCurrency(Money $money): bool
 	{
 		return $money->getCurrency()->equals($this->getCurrency());
-	}
-
-	/**
-	 * @return Money
-	 */
-	public function negate()
-	{
-		return new self(
-			bcmul('-1', $this->amount, self::DECIMAL_SCALE),
-			$this->currency
-		);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isPositive():bool
-	{
-		return bccomp($this->amount, '0', self::DECIMAL_SCALE) > 0;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isPositiveOrNull()
-	{
-		return $this->isPositive() || $this->isNull();
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isNegative()
-	{
-		return bccomp($this->amount, '0', self::DECIMAL_SCALE) < 0;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isNegativeOrNull()
-	{
-		return $this->isNegative() || $this->isNull();
-	}
-
-	/**
-	 * @param Money $other
-	 * @return bool
-	 */
-	public function isGreaterThan(Money $other)
-	{
-		return bccomp($this->amount, $other->amount, self::DECIMAL_SCALE) > 0;
-	}
-
-	/**
-	 * @param Money $other
-	 * @return bool
-	 */
-	public function isGreaterThanOrEqual(Money $other)
-	{
-		return bccomp($this->amount, $other->amount, self::DECIMAL_SCALE) >= 0;
-	}
-
-	/**
-	 * @param Money $other
-	 * @return bool
-	 */
-	public function isLessThan(Money $other)
-	{
-		return bccomp($this->amount, $other->amount, self::DECIMAL_SCALE) < 0;
-	}
-
-	/**
-	 * @param Money $other
-	 * @return bool
-	 */
-	public function isLessThanOrEqual(Money $other)
-	{
-		return bccomp($this->amount, $other->amount, self::DECIMAL_SCALE) <= 0;
-	}
-
-	/**
-	 * @param Money $other
-	 * @return bool
-	 */
-	public function isEqual(Money $other): bool
-	{
-		return bccomp($this->amount, $other->amount, self::DECIMAL_SCALE) == 0 && $this->hasSameCurrency($other);
 	}
 
 	/**
@@ -256,7 +126,7 @@ final class Money
 	/**
 	 * @return string
 	 */
-	private function getPrecisionMultiplier()
+	private function getPrecisionMultiplier(): string
 	{
 		return str_pad(
 			'1.',
